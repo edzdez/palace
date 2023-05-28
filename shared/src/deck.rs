@@ -3,14 +3,14 @@ use rand::seq::SliceRandom;
 
 use crate::card::*;
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct Deck {
     cards: Vec<Card>,
     curr_idx: usize,
 }
 
-impl Default for Deck {
-    fn default() -> Self {
+impl Deck {
+    pub fn new() -> Self {
         // I don't like this...
         let mut cards = Vec::new();
         for n in 1..=13 as u8 {
@@ -25,19 +25,22 @@ impl Default for Deck {
             curr_idx: 0
         }
     }
-}
 
-impl Deck {
-    fn new() -> Self {
-        Default::default()
-    }
-
-    fn shuffle(&mut self) {
+    pub fn shuffle(&mut self) {
         self.cards.shuffle(&mut thread_rng());
         self.curr_idx = 0;
     }
 
-    fn deal(&mut self) -> Option<Card> {
+    pub fn clear(&mut self) {
+        self.cards.clear();
+        self.curr_idx = 0;
+    }
+
+    pub fn draw(&mut self) -> Option<Card> {
         self.cards.get(self.curr_idx).cloned()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.curr_idx >= self.cards.len()
     }
 }
