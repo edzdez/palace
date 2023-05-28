@@ -1,4 +1,4 @@
-use shared::deck::Deck;
+mod game;
 
 fn main() {
     println!("Hello, world!");

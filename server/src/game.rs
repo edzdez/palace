@@ -1,6 +1,6 @@
-use crate::deck::*;
-use crate::hand::*;
-use crate::pile::*;
+use shared::deck::*;
+use shared::hand::*;
+use shared::pile::*;
 
 #[derive(Default, Debug, Clone)]
 pub struct Game {
