@@ -77,13 +77,13 @@ async fn create_lobby_handler(
     axum::extract::Path(roomid): axum::extract::Path<String>
 ) -> impl IntoResponse {
     if roomid.is_empty() || roomid.len() > 32 {
-        return (StatusCode::BAD_REQUEST, "roomid too long")
+        return (StatusCode::BAD_REQUEST, "roomid is empty or too long")
     }
 
     let mut data = DATA.write().await;
     match data.get(&roomid) {
         Some(_) => {
-            (StatusCode::BAD_REQUEST, "roomid already exists")
+            (StatusCode::BAD_REQUEST, "room already exists")
         }
         None => {
             let room = Room::new();
