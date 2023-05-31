@@ -1,5 +1,5 @@
-use rand::thread_rng;
 use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 use crate::card::*;
 
@@ -20,10 +20,7 @@ impl Deck {
             cards.push(Card::new(Denomination::from(n), Suit::Diamonds));
         }
 
-        Self {
-            cards,
-            curr_idx: 0
-        }
+        Self { cards, curr_idx: 0 }
     }
 
     pub fn shuffle(&mut self) {

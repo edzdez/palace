@@ -7,7 +7,7 @@ use crate::error::*;
 
 #[derive(Default, Debug, Clone)]
 pub struct Hand {
-    hand: Vec<Option<Card>>
+    hand: Vec<Option<Card>>,
 }
 
 impl Display for Hand {
@@ -22,7 +22,9 @@ impl Hand {
     }
 
     pub fn play(&mut self, deck: &mut Deck, i: usize) -> Result<Card, GameError> {
-        let card = self.hand.get_mut(i)
+        let card = self
+            .hand
+            .get_mut(i)
             .map(|card| mem::take(card))
             .ok_or(GameError::InvalidIndex(i))?
             .ok_or(GameError::NoCard(i));
@@ -33,6 +35,3 @@ impl Hand {
         card
     }
 }
-
-
-

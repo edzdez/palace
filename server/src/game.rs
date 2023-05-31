@@ -6,8 +6,10 @@ use shared::pile::*;
 pub struct Game {
     pub deck: Deck,
     pub pile: Pile,
-    pub hands: (Hand, Hand),
-    pub face_downs: (Hand, Hand),
+    pub p1_hand: Hand,
+    pub p2_hand: Hand,
+    pub p1_face_downs: Hand,
+    pub p2_face_downs: Hand,
 }
 
 impl Game {

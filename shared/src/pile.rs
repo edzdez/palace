@@ -2,7 +2,7 @@ use crate::card::*;
 
 #[derive(Default, Debug, Clone)]
 pub struct Pile {
-    cards: Vec<Card>
+    cards: Vec<Card>,
 }
 
 impl Pile {

@@ -7,4 +7,3 @@ pub enum GameError {
     #[error("Index `{0}` is invalid")]
     InvalidIndex(usize),
 }
-
