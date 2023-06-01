@@ -118,41 +118,7 @@ async fn game_task(roomid: String, mut rx: mpsc::Receiver<Message>) {
         let mut rooms = ROOMS.write().await;
         let game = rooms.get_mut(&roomid).unwrap();
         match rx.try_recv() {
-            Ok(msg) => match msg {
-                Message::Join(player_name) => {
-                    if let None = game.p1 {
-                        tracing::info!(
-                            "player \"{}\" logged into room \"{}\" as player 1",
-                            &player_name,
-                            &roomid
-                        );
-                        game.p1 = Some(player_name);
-                    } else if let None = game.p2 {
-                        tracing::info!(
-                            "player \"{}\" logged into room \"{}\" as player 2",
-                            &player_name,
-                            &roomid
-                        );
-                        game.p2 = Some(player_name);
-                    } else {
-                        tracing::info!(
-                            "player \"{}\" logged into room \"{}\" but it was all filled up!",
-                            &player_name,
-                            &roomid
-                        );
-                    }
-                }
-                Message::Leave(player_name) => {
-                    tracing::info!("player \"{}\" left room \"{}\"", &player_name, &roomid);
-
-                    tracing::info!("shutting down room \"{}\"", &roomid);
-                    return;
-                }
-                Message::EndGame => {
-                    tracing::info!("shutting down room \"{}\"", &roomid);
-                    return;
-                }
-            },
+            Ok(msg) => handle_messages(roomid.clone(), game, msg),
             Err(mpsc::error::TryRecvError::Empty) => {
                 continue;
             }
@@ -167,6 +133,48 @@ async fn game_task(roomid: String, mut rx: mpsc::Receiver<Message>) {
         if game.player_count() == 2 {
             break;
         }
+    }
+}
+
+fn handle_messages(roomid: String, game: &mut Room, msg: Message) {
+    match msg {
+        Message::Join(player_name) => {
+            add_player(roomid.clone(), player_name, game);
+        }
+        Message::Leave(player_name) => {
+            tracing::info!("player \"{}\" left room \"{}\"", &player_name, &roomid);
+
+            tracing::info!("shutting down room \"{}\"", &roomid);
+            return;
+        }
+        Message::EndGame => {
+            tracing::info!("shutting down room \"{}\"", &roomid);
+            return;
+        }
+    }
+}
+
+fn add_player(roomid: String, player_name: String, game: &mut Room) {
+    if let None = game.p1 {
+        tracing::info!(
+            "player \"{}\" logged into room \"{}\" as player 1",
+            &player_name,
+            &roomid
+        );
+        game.p1 = Some(player_name);
+    } else if let None = game.p2 {
+        tracing::info!(
+            "player \"{}\" logged into room \"{}\" as player 2",
+            &player_name,
+            &roomid
+        );
+        game.p2 = Some(player_name);
+    } else {
+        tracing::info!(
+            "player \"{}\" logged into room \"{}\" but it was all filled up!",
+            &player_name,
+            &roomid
+        );
     }
 }
 
